@@ -96,7 +96,8 @@ class BrokenAxes:
             if ylims is not None:
                 # Check if the user has asked for a log scale on y axis
                 if yscale == "log":
-                    height_ratios = [np.log(i[1]) - np.log(i[0]) for i in ylims[::-1]]
+                    height_ratios = [np.log(i[1]) - np.log(i[0])
+                                     for i in ylims[::-1]]
                 else:
                     height_ratios = [i[1] - i[0] for i in ylims[::-1]]
             else:
@@ -149,10 +150,10 @@ class BrokenAxes:
         for i, ax in enumerate(self.axs):
             if ylims is not None:
                 ax.set_ylim(ylims[::-1][i // ncols])
-                ax.get_shared_y_axes().join(ax, self.first_col[i // ncols])
+                ax.sharey(self.first_col[i // ncols])
             if xlims is not None:
                 ax.set_xlim(xlims[i % ncols])
-                ax.get_shared_x_axes().join(ax, self.last_row[i % ncols])
+                ax.sharex(self.last_row[i % ncols])
         self.standardize_ticks()
         if d:
             self.draw_diags()
@@ -190,38 +191,46 @@ class BrokenAxes:
                 ypos = bounds[1]
                 if not ax.get_subplotspec().is_last_col():
                     xpos = bounds[0] + bounds[2]
-                    ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                    ds += self.draw_diag(ax, xpos, xlen,
+                                         ypos, ylen, **d_kwargs)
                 if not ax.get_subplotspec().is_first_col():
                     xpos = bounds[0]
-                    ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                    ds += self.draw_diag(ax, xpos, xlen,
+                                         ypos, ylen, **d_kwargs)
 
             if ax.get_subplotspec().is_first_col():
                 xpos = bounds[0]
                 if not ax.get_subplotspec().is_first_row():
                     ypos = bounds[1] + bounds[3]
-                    ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                    ds += self.draw_diag(ax, xpos, xlen,
+                                         ypos, ylen, **d_kwargs)
                 if not ax.get_subplotspec().is_last_row():
                     ypos = bounds[1]
-                    ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                    ds += self.draw_diag(ax, xpos, xlen,
+                                         ypos, ylen, **d_kwargs)
 
             if not self.despine:
                 if ax.get_subplotspec().is_first_row():
                     ypos = bounds[1] + bounds[3]
                     if not ax.get_subplotspec().is_last_col():
                         xpos = bounds[0] + bounds[2]
-                        ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                        ds += self.draw_diag(ax, xpos, xlen,
+                                             ypos, ylen, **d_kwargs)
                     if not ax.get_subplotspec().is_first_col():
                         xpos = bounds[0]
-                        ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                        ds += self.draw_diag(ax, xpos, xlen,
+                                             ypos, ylen, **d_kwargs)
 
                 if ax.get_subplotspec().is_last_col():
                     xpos = bounds[0] + bounds[2]
                     if not ax.get_subplotspec().is_first_row():
                         ypos = bounds[1] + bounds[3]
-                        ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                        ds += self.draw_diag(ax, xpos, xlen,
+                                             ypos, ylen, **d_kwargs)
                     if not ax.get_subplotspec().is_last_row():
                         ypos = bounds[1]
-                        ds += self.draw_diag(ax, xpos, xlen, ypos, ylen, **d_kwargs)
+                        ds += self.draw_diag(ax, xpos, xlen,
+                                             ypos, ylen, **d_kwargs)
         self.diag_handles = ds
 
     def set_spines(self):
@@ -302,7 +311,6 @@ class BrokenAxes:
                 ax.get_yaxis().get_offset_text().set_visible(False)
             if not (subplotspec.is_last_col() and subplotspec.is_last_row()):
                 ax.get_xaxis().get_offset_text().set_visible(False)
-
 
     def __getattr__(self, method):
         """Catch all methods that are not defined and pass to internal axes
